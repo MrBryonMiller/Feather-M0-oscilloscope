@@ -1,0 +1,54 @@
+Wiring as viewed from LCD Screen
+LCD------------To-----------------
+GND			MO GND
+3-5V			MO USB
+3Vo			LCD IM2
+CLK			MO SCK
+MISO			MO MI
+MOSI			MO MO
+CS			MO 10
+D/C			MO 9
+RST			MO 6
+Lite
+Y+			MO A2
+X+			MO 12
+Y-			MO 11
+X-			M0 A3
+GND
+IM2			LCD 3Vo
+IM1
+IM0
+CCS
+CD
+
+
+Wiring as viewed from Feather M0
+M0-------------LCD-------Notes--------------
+RST			N/C
+3V			N/C
+AR			N/C
+GND			GND		Input Divider Low
+A0					2 Hz sine wave out
+A1					scope in 1, Input Divider middle
+A2			Y+
+A3			X-
+A4					scope in 2, Input Divider middle
+A5			N/C
+SCK			CLK
+MO			MOSI
+MI			MISO
+RX			N/C
+TX			N/C
+Wake			N/C
+Bat			N/C
+EN			N/C
+USB			3-5V
+13					onboard LED indicating trigger
+12			X+
+11			Y-
+10			CS
+9			D/C
+6			RST
+5					Square wave out
+SCL			N/C
+SDA			N/C

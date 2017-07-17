@@ -1,0 +1,34 @@
+LCDscope.ino	main program
+dmac-adc.h	contains dma and adc data shared with other modules.
+dmac-adc.ino	sets up adc for free run. sets up dma to put adc results in one of two buffers.
+				One buffer is always being filled, the other buffer is available for software to unload.
+				DMA controller automatically toggles between the two buffers and interrupts as
+				each one is full.  The buffers a 1k each.  The interrupts indicating the buffer is
+				full occurs very close to every 2 msec.  So this 2 msec is used as the basic timing for 
+				the scope.  This correspond to 500,000 samples per second.
+scopeworker.h	contains scope data shared with other modules.
+scopeworker.ino has the routine that is called when dma says a buffer is full.  Upon full it starts
+				processing the full adc buffer looking for trigger condition.  When trigger is found, it 
+				starts to fill up a 430 word display buffer.  When display buffer is full, this routine 
+				signals that LCD can be refreshed.
+LCDworker.h	contains LCD data shared with other modules.
+LCDworker.ino	at setup time in charge of providing the recticle for the scope or the Menu.  At run time 
+				works in one of two ways.  For slow sweep rates the LCD is redrawn point-by-point as 
+				new data is placed into the scope buffer. At higher sweep rates this routine waits for 
+				a full display buffer and, when signaled, proceeds to erase the old data from 
+				the LCD - fills in any recticle pixels that where overdrawn by old data - then draws 
+				new data to the display.
+SineWave.ino	this module has the routine that is driven by a 500Hz timer.  The timer routine toggles a 
+				discrete output on/off at this rate.  This discrete output is used by a part of the analog 
+				circuitry to drive a charge pump so that approximately -3 vdc is available for the analog 
+				input circuitry.  Also another routine calculates a 2 Hz sine Wave that is connected to a 
+				the digital-to-analog converter of the M0.  The sine wave by modeling two integrators 
+				chasing each other in series.
+TFTworker.h	contains TFT data shared with other modules.
+TFTWorker.ino	this module has a setup routine that turns on analog comparators looking at the touchscreen.
+				While the scope is running (i.e. not showing its menu) the inputs from the touchscreen 
+				cannot be read with analog reads. This is because the adcs must be setup up very 
+				specifically for the dma to work. So rather than using adcs, analog comparators are 
+				used to see if the screen has been tapped.  Once tapped, the Menu will be shown and 
+				another routine can use the adcs to see where the touches take place, and what is to be
+				done about each touch.  When the user taps "Done" or the Menu times out.  The dma/adc is reestablished and control returns to scope operation.
